@@ -1,26 +1,23 @@
-# Use an official Node.js runtime as a parent image
-FROM node:14
+# Use a modern, stable Node.js base image
+FROM node:20-slim
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /usr/src/app
 
-# Upgrade npm to avoid lockfileVersion compatibility issues
-RUN npm install -g npm@latest
-
-# Copy package.json and package-lock.json to the container
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install application dependencies
-RUN npm install
+# Install dependencies
+RUN npm ci
 
-# Copy the rest of the application files to the container
+# Copy the rest of the source code
 COPY . .
 
-# Build the React or Next.js app
+# Build the app (for React/Next.js/etc.)
 RUN npm run build
 
-# Expose port 3000 (assuming app runs on 3000)
+# Expose app port
 EXPOSE 3000
 
-# Define the command to run your application
+# Start app in development mode (change to `start` for production)
 CMD ["npm", "run", "dev"]
